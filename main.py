@@ -1,17 +1,31 @@
-from appJar import gui
-import time as t
-import ctypes
-user32 = ctypes.windll.user32
-# each list of numbers contains the top left x/y and bottom right x/y
-screensize = user32.GetSystemMetrics(0),user32.GetSystemMetrics(1)
+import time
 
-with gui('noob', screensize, stretch='both', sticky='news') as app:
-    app.label('lal', bg='purple')
-    app.setPadding([100,100])
-    app.setInPadding([10,10])
-
-app.go()
+from PyQt5 import *
+from PyQt5 import QtGui, uic
+from PyQt5.QtGui import QImage, QMovie
+from PyQt5.QtWidgets import *
+import sys
 
 
+class MyDialog (QMainWindow) :
+  def __init__(self) :
+    super ().__init__ ()
+    uic.loadUi ("test.ui", self)
+    movie = QMovie("load.gif")
+    self.myLabel.setMovie(movie)
+    movie.start()
+    self.setStyleSheet ("QMainWindow {background: 'white';}");
+    time.sleep(2)
+    self.myLabel.hide()
+    self.pushButton.clicked.connect (self.buttonPress)
+
+  def buttonPress(self) :
+    print ("pressed!" + self.lineEdit.text())
+    self.myLabel.hide()
 
 
+if __name__ == '__main__' :
+  app = QApplication (sys.argv)
+  dialog = MyDialog ()
+  dialog.show ()
+  sys.exit (app.exec_ ())

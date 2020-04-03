@@ -1,46 +1,74 @@
-﻿<?xml version="1.0" ?>
-<interface>
-  <object class="ttk.Frame" id="mainwindow">
-    <property name="height">200</property>
-    <property name="width">200</property>
-    <layout>
-      <property name="column">0</property>
-      <property name="propagate">True</property>
-      <property name="row">0</property>
-      <property name="sticky">nesw</property>
-    </layout>
-    <child>
-      <object class="ttk.Button" id="Button_1">
-        <property name="image">green.gif</property>
-        <property name="text" translatable="yes">Button_1</property>
-        <layout>
-          <property name="column">0</property>
-          <property name="propagate">True</property>
-          <property name="row">0</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Button" id="Button_2">
-        <property name="image">yellow.gif</property>
-        <property name="text" translatable="yes">Button_2</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="propagate">True</property>
-          <property name="row">0</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Button" id="Button_3">
-        <property name="image">red.gif</property>
-        <property name="text" translatable="yes">Button_3</property>
-        <layout>
-          <property name="column">2</property>
-          <property name="propagate">True</property>
-          <property name="row">0</property>
-        </layout>
-      </object>
-    </child>
-  </object>
-</interface>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>70</y>
+      <width>361</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>20</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="myLabel">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>120</y>
+      <width>351</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
