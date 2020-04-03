@@ -1,26 +1,10 @@
-# Author: Captcha
-from appJar import gui
-import socket
-import os
+from appJar import gui 
 
+def press():
+    print("User:", app.entry("Username"), "Pass:", app.entry("Password"))
 
-
-
-
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
-
-
-if (ip_address != '192.168.0.113'):
-    exit()
-print(f"Hostname: {hostname}")
-os.system('cls')
-
-
-
-
-
-
-
-
-
+with gui("Login Window", "400x200", bg='orange', font={'size':18}) as app:
+    app.label("Hi", bg='blue', fg='gray')
+    app.entry("Username", label=True, focus=True)
+    app.entry("Password", label=True, secret=True)
+    app.buttons(["Submit", "Cancel"], [press, app.stop])
