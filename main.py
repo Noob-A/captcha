@@ -1,10 +1,17 @@
-from appJar import gui 
+from appJar import gui
+import time as t
+import ctypes
+user32 = ctypes.windll.user32
+# each list of numbers contains the top left x/y and bottom right x/y
+screensize = user32.GetSystemMetrics(0),user32.GetSystemMetrics(1)
 
-def press():
-    print("User:", app.entry("Username"), "Pass:", app.entry("Password"))
+with gui('noob', screensize, stretch='both', sticky='news') as app:
+    app.label('lal', bg='purple')
+    app.setPadding([100,100])
+    app.setInPadding([10,10])
 
-with gui("Login Window", "400x200", bg='orange', font={'size':18}) as app:
-    app.label("Hi", bg='blue', fg='gray')
-    app.entry("Username", label=True, focus=True)
-    app.entry("Password", label=True, secret=True)
-    app.buttons(["Submit", "Cancel"], [press, app.stop])
+app.go()
+
+
+
+
