@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>773</width>
-    <height>585</height>
+    <width>781</width>
+    <height>595</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -64,9 +64,9 @@
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>230</x>
+      <x>0</x>
       <y>110</y>
-      <width>321</width>
+      <width>771</width>
       <height>121</height>
      </rect>
     </property>
@@ -75,8 +75,11 @@
       <pointsize>72</pointsize>
      </font>
     </property>
+    <property name="text">
+     <string/>
+    </property>
     <property name="maxLength">
-     <number>6</number>
+     <number>544444444</number>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -104,9 +107,64 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>710</x>
+      <y>230</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>°C</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>430</y>
+      <width>431</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>buton2.gif</normaloff>buton2.gif</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>1000</width>
+      <height>1000</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>230</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>KM</string>
+    </property>
+   </widget>
    <zorder>myLabel</zorder>
    <zorder>pushButton</zorder>
    <zorder>lineEdit</zorder>
+   <zorder>pushButton_2</zorder>
+   <zorder>pushButton_3</zorder>
+   <zorder>pushButton_4</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -114,18 +172,10 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>773</width>
+     <width>781</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuSymbols">
-    <property name="title">
-     <string>Symbols</string>
-    </property>
-    <addaction name="fahrenheitAction"/>
-    <addaction name="celciusAction"/>
-   </widget>
-   <addaction name="menuSymbols"/>
   </widget>
   <action name="action_C">
    <property name="text">
@@ -137,7 +187,7 @@
     <string>°F</string>
    </property>
   </action>
-  <action name="fahrenheitAction">
+  <action name="celciusAction_2">
    <property name="text">
     <string>̊C</string>
    </property>
