@@ -21,9 +21,8 @@ class MyDialog (QMainWindow) :
 
     self.pushButton.hide()
     self.lineEdit.hide()
-    self.pushButton.setIcon (QtGui.QIcon("buton.gif"))
-    self.pushButton.setIconSize (QSize (1000, 1500))
 
+    self.pushButton.setIconSize (QSize (1000, 1500))
     QTimer.singleShot(4000,
                       lambda: self.doneLoading())
 
@@ -51,10 +50,6 @@ class MyDialog (QMainWindow) :
     self.myLabel.hide()
     self.lineEdit.show()
     self.unfade (self.pushButton)
-    self.setStyleSheet ("QMainWindow {background: rgba(246, 246, 246, 255)}")
-
-
-
 
   def buttonPress(self) :
     print ("pressed!" + self.lineEdit.text())
