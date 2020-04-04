@@ -1,66 +1,13 @@
-import time
-
-from PyQt5 import *
-from PyQt5 import QtGui, uic
-from PyQt5.QtCore import QTimer, QPropertyAnimation, QVariantAnimation, QEasingCurve, pyqtSlot, QVariant, QEventLoop
-from PyQt5.QtGui import QImage, QMovie, QPainter, QPalette, QColor
-from PyQt5.QtWidgets import *
 import sys
 
+from PyQt5 import uic, QtGui
+from PyQt5.QtCore import QTimer, QPropertyAnimation, QSize
+from PyQt5.QtGui import QMovie, QPixmap, QPainter
+from PyQt5.QtWidgets import *
+import sys
+from PyQt5.QtGui import *
 
-class AnimationLabel (QLabel) :
-  def __init__(self, *args, **kwargs) :
-    QLabel.__init__ (self, *args, **kwargs)
-    self.animation = QVariantAnimation ()
-    self.animation.valueChanged.connect (self.changeColor)
-
-  @pyqtSlot (QVariant)
-  def changeColor(self, color) :
-    palette = self.palette ()
-    palette.setColor (QPalette.WindowText, color)
-    self.setPalette (palette)
-
-  def startFadeIn(self) :
-    self.animation.stop ()
-    self.animation.setStartValue (QColor (0, 0, 0, 0))
-    self.animation.setEndValue (QColor (0, 0, 0, 255))
-    self.animation.setDuration (2000)
-    self.animation.setEasingCurve (QEasingCurve.InBack)
-    self.animation.start ()
-
-  def startFadeOut(self) :
-    self.animation.stop ()
-    self.animation.setStartValue (QColor (0, 0, 0, 255))
-    self.animation.setEndValue (QColor (0, 0, 0, 0))
-    self.animation.setDuration (2000)
-    self.animation.setEasingCurve (QEasingCurve.OutBack)
-    self.animation.start ()
-
-  def startAnimation(self) :
-    self.startFadeIn ()
-    loop = QEventLoop ()
-    self.animation.finished.connect (loop.quit)
-    loop.exec_ ()
-    QTimer.singleShot (2000, self.startFadeOut)
-
-
-class Widget (QWidget) :
-  def __init__(self) :
-    super ().__init__ ()
-    lay = QVBoxLayout (self)
-    self.greeting_text = AnimationLabel ("greeting_text")
-    self.greeting_text.setStyleSheet ("font : 45px; font : bold; font-family : HelveticaNeue-UltraLight")
-    lay.addWidget (self.greeting_text)
-    btnFadeIn = QPushButton ("fade in")
-    btnFadeOut = QPushButton ("fade out")
-    btnAnimation = QPushButton ("animation")
-    lay.addWidget (btnFadeIn)
-    lay.addWidget (btnFadeOut)
-    lay.addWidget (btnAnimation)
-    btnFadeIn.clicked.connect (self.greeting_text.startFadeIn)
-    btnFadeOut.clicked.connect (self.greeting_text.startFadeOut)
-    btnAnimation.clicked.connect (self.greeting_text.startAnimation)
-
+######################################################################################################
 
 class MyDialog (QMainWindow) :
   def __init__(self) :
@@ -69,23 +16,44 @@ class MyDialog (QMainWindow) :
     movie = QMovie("load.gif")
     self.myLabel.setMovie(movie)
     movie.start()
-    movie = QMovie ("white.gif")
-    self.myLabel.setMovie (movie)
-    movie.start ()
-    self.setStyleSheet ("QMainWindow {background: 'white';}");
+    self.setStyleSheet ("QMainWindow {background: 'white';}")
     self.pushButton.clicked.connect (self.buttonPress)
 
     self.pushButton.hide()
     self.lineEdit.hide()
+    self.pushButton.setIcon (QtGui.QIcon("buton.gif"))
+    self.pushButton.setIconSize (QSize (1000, 1500))
 
     QTimer.singleShot(4000,
                       lambda: self.doneLoading())
+
+  def fade(self, widget) :
+    self.effect = QGraphicsOpacityEffect ()
+    widget.setGraphicsEffect (self.effect)
+
+    self.animation = QPropertyAnimation (self.effect, b"opacity")
+    self.animation.setDuration (1000)
+    self.animation.setStartValue (1)
+    self.animation.setEndValue (0)
+    self.animation.start ()
+
+  def unfade(self, widget) :
+    self.effect = QGraphicsOpacityEffect ()
+    widget.setGraphicsEffect (self.effect)
+    self.animation = QPropertyAnimation (self.effect, b"opacity")
+    self.animation.setDuration (3000)
+    self.animation.setStartValue (0)
+    self.animation.setEndValue (1)
+    self.animation.start ()
 
   def doneLoading(self):
     self.pushButton.show()
     self.myLabel.hide()
     self.lineEdit.show()
-    self.myLabel2.setStyleSheet("{background-color: rgba(255, 255, 0,255}")
+    self.unfade (self.pushButton)
+    self.setStyleSheet ("QMainWindow {background: rgba(246, 246, 246, 255)}")
+
+
 
 
   def buttonPress(self) :
@@ -93,11 +61,10 @@ class MyDialog (QMainWindow) :
     self.myLabel.hide()
 
 
-
-
-
 if __name__=='__main__':
     app = QApplication (sys.argv)
     dialog = MyDialog ()
     dialog.show ()
     sys.exit (app.exec_ ())
+
+
