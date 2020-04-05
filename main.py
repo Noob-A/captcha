@@ -28,6 +28,9 @@ class MyDialog(QMainWindow) :
     self.pushButton_3.clicked.connect(self.copy)
     self.pushButton_2.clicked.connect(self.symbol_of_c)
     self.km.clicked.connect(self.km1)
+    self.money.clicked.connect(self.money)
+
+    self.money.hide()
     self.pushButton.hide()
     self.pushButton_3.hide()
     self.pushButton_2.hide()
@@ -75,8 +78,10 @@ class MyDialog(QMainWindow) :
       i = i[:-2]
       c = float(i)
       mi = c * 0.62137
-      f = round(mi, 10)
+      f = round(mi)
       self.lineEdit.setText(f"{c}KM ({f}miles)")
+
+
   def symbol_of_c(self):
     n = self.lineEdit.text()
     self.lineEdit.setText(f"{n}°")
@@ -92,9 +97,6 @@ class MyDialog(QMainWindow) :
   def km1(self):
     n = self.lineEdit.text()
     self.lineEdit.setText(f"{n}KM")
-
-
-
     self.myLabel.hide()
 
   def unf(self, widget) :
@@ -105,6 +107,9 @@ class MyDialog(QMainWindow) :
     self.animation.setStartValue(0)
     self.animation.setEndValue(1)
     self.animation.start()
+
+  def money(self):
+    pass
 
   def doneLoading(self) :
     self.pushButton.show()
@@ -120,6 +125,7 @@ class MyDialog(QMainWindow) :
     self.unfade(self.pushButton_2)
     self.unfade(self.pushButton_3)
     self.unfade(self.km)
+    self.unfade(self.money)
     self.setStyleSheet("QLineEdit { border-radius: 5px; }")
 
 
