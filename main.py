@@ -28,7 +28,7 @@ class MyDialog(QMainWindow) :
     self.pushButton_3.clicked.connect(self.copy)
     self.pushButton_2.clicked.connect(self.symbol_of_c)
     self.km.clicked.connect(self.km1)
-    self.money.clicked.connect(self.money)
+    self.money.clicked.connect(self.money1)
 
     self.money.hide()
     self.pushButton.hide()
@@ -108,8 +108,10 @@ class MyDialog(QMainWindow) :
     self.animation.setEndValue(1)
     self.animation.start()
 
-  def money(self):
+  def money1(self):
+    #tst
     pass
+
 
   def doneLoading(self) :
     self.pushButton.show()
