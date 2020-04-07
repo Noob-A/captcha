@@ -1,5 +1,7 @@
 import math
-import os
+import time
+
+from forex_python.converter import CurrencyRates
 import sys
 
 import clipboard
@@ -29,12 +31,20 @@ class MyDialog(QMainWindow) :
     self.pushButton_2.clicked.connect(self.symbol_of_c)
     self.km.clicked.connect(self.km1)
     self.money.clicked.connect(self.money1)
+    self.euro.clicked.connect(self.euro1)
 
+    self.dollar.clicked.connect(self.dollar1)
+    self.rub.clicked.connect(self.rub1)
+    self.cls.clicked.connect(self.cls1)
     self.money.hide()
+    self.rub.hide()
+    self.euro.hide()
+    self.dollar.hide()
     self.pushButton.hide()
     self.pushButton_3.hide()
     self.pushButton_2.hide()
     self.km.hide()
+
     self.lineEdit.hide()
 
     self.celciusAction_2.triggered.connect(self.celcius_menu_action)
@@ -45,15 +55,14 @@ class MyDialog(QMainWindow) :
                       lambda : self.doneLoading())
 
   def fade(self, widget) :
-    self.effect = QGraphicsOpacityEffect()
-    widget.setGraphicsEffect(self.effect)
-
-    animation = QPropertyAnimation(self.effect, b"opacity")
-    animation.setDuration(1000)
-    animation.setStartValue(1)
-    animation.setEndValue(0)
-    animation.start()
-    self.animations.append(animation)
+     self.effect = QGraphicsOpacityEffect()
+     widget.setGraphicsEffect(self.effect)
+     animation = QPropertyAnimation(self.effect, b"opacity")
+     animation.setDuration(1000)
+     animation.setStartValue(1)
+     animation.setEndValue(0)
+     animation.start()
+     self.animations.append(animation)
 
   def unfade(self, widget) :
     self.effect = QGraphicsOpacityEffect()
@@ -80,7 +89,30 @@ class MyDialog(QMainWindow) :
       mi = c * 0.62137
       f = round(mi)
       self.lineEdit.setText(f"{c}KM ({f}miles)")
-
+    if i.endswith('€') :
+      amount = float(i[:-1])
+      c = CurrencyRates()
+      c.get_rates('EUR')
+      ru = round(c.convert('EUR', 'RUB', amount))
+      usd = round(c.convert('EUR', 'USD', amount))
+      pounds = round(c.convert('EUR', 'GBP', amount))
+      self.lineEdit.setText(f"{i} ({ru}₽,{usd}$,{pounds}£)")
+    if i.endswith('$'):
+      amount = float(i[:-1])
+      c = CurrencyRates()                                     
+      c.get_rates('USD')
+      ru = round(c.convert('USD', 'RUB', amount))
+      usd = round(c.convert('USD', 'EUR', amount))
+      pounds = round(c.convert('USD', 'GBP', amount))
+      self.lineEdit.setText(f"{i} ({ru}₽,{usd}€,{pounds}£)")
+    if i.endswith('₽'):
+      amount = float(i[:-1])
+      c = CurrencyRates()
+      c.get_rates('RUB')
+      ru = round(c.convert('RUB', 'USD', amount))
+      usd = round(c.convert('RUB', 'EUR', amount))
+      pounds = round(c.convert('RUB', 'GBP', amount))
+      self.lineEdit.setText(f"{i} ({ru}$,{usd}€,{pounds}£)")
 
   def symbol_of_c(self):
     n = self.lineEdit.text()
@@ -109,8 +141,43 @@ class MyDialog(QMainWindow) :
     self.animation.start()
 
   def money1(self):
-    #tst
-    pass
+ 
+    self.pushButton_2.show()
+
+    self.km.show()
+    self.money.show()
+    self.euro.show()
+    self.dollar.show()
+    self.rub.show()
+
+    self.fade(self.pushButton_2)
+    self.fade(self.km)
+    self.unfade(self.rub)
+    self.unfade(self.euro)
+    self.unfade(self.dollar)
+
+    self.fade(self.money)
+
+
+  def cls1(self):
+    self.lineEdit.setText("")
+
+
+
+  def euro1(self):
+    self.lineEdit.setText(f"{self.lineEdit.text()}€")
+
+
+
+  def dollar1(self):
+    self.lineEdit.setText(f"{self.lineEdit.text()}$")
+
+  def rub1(self):
+    self.lineEdit.setText(f"{self.lineEdit.text()}₽")
+
+
+
+
 
 
   def doneLoading(self) :
@@ -118,6 +185,7 @@ class MyDialog(QMainWindow) :
     self.pushButton_2.show()
     self.pushButton_3.show()
     self.km.show()
+    self.money.show()
     self.setStyleSheet("QMainWindow {background: rgba(247, 247, 239 ,255)}")
     self.setStyleSheet("QMainWindow {background: hsl(60, 33, 95)}")
     self.myLabel.hide()
@@ -128,6 +196,13 @@ class MyDialog(QMainWindow) :
     self.unfade(self.pushButton_3)
     self.unfade(self.km)
     self.unfade(self.money)
+    self.unfade(self.dollar)
+    self.unfade(self.euro)
+    self.unfade(self.rub)
+
+
+
+
     self.setStyleSheet("QLineEdit { border-radius: 5px; }")
 
 

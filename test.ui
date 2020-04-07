@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
-    <height>578</height>
+    <width>813</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -220,25 +220,12 @@
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="back">
-    <property name="geometry">
-     <rect>
-      <x>390</x>
-      <y>200</y>
-      <width>211</width>
-      <height>101</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>BACK</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="rub">
     <property name="geometry">
      <rect>
       <x>180</x>
       <y>200</y>
-      <width>211</width>
+      <width>421</width>
       <height>101</height>
      </rect>
     </property>
@@ -256,7 +243,19 @@
      </size>
     </property>
    </widget>
-   <zorder>myLabel</zorder>
+   <widget class="QPushButton" name="cls">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>530</y>
+      <width>771</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>clear!</string>
+    </property>
+   </widget>
    <zorder>pushButton</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton_2</zorder>
@@ -265,8 +264,9 @@
    <zorder>money</zorder>
    <zorder>dollar</zorder>
    <zorder>euro</zorder>
-   <zorder>back</zorder>
    <zorder>rub</zorder>
+   <zorder>myLabel</zorder>
+   <zorder>cls</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -274,7 +274,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>805</width>
+     <width>813</width>
      <height>22</height>
     </rect>
    </property>
