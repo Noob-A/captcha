@@ -44,6 +44,7 @@ class MyDialog(QMainWindow) :
     self.pushButton_3.hide()
     self.pushButton_2.hide()
     self.km.hide()
+    self.cls.hide()
 
     self.lineEdit.hide()
 
@@ -149,12 +150,14 @@ class MyDialog(QMainWindow) :
     self.euro.show()
     self.dollar.show()
     self.rub.show()
+    self.cls.show()
 
     self.fade(self.pushButton_2)
     self.fade(self.km)
     self.unfade(self.rub)
     self.unfade(self.euro)
     self.unfade(self.dollar)
+    self.unfade(self.cls)
 
     self.fade(self.money)
 
