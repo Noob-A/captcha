@@ -22,24 +22,37 @@ class MyDialog(QMainWindow):
 
   def __init__(self):
     super().__init__()
+
     self.animations = []
     uic.loadUi("test.ui", self)
     movie = QMovie("load.gif")
     self.myLabel.setMovie(movie)
     movie.start()
+    self.f=open("settings.txt", "r")
+
+    self.abc = self.f.read()
+    self.f=open("settings.txt", "a+")
     self.setStyleSheet("QMainWindow {background: 'white';}")
+
+
+
     self.pushButton.clicked.connect(self.buttonPress)
     self.pushButton_3.clicked.connect(self.copy)
     self.pushButton_2.clicked.connect(self.symbol_of_c)
     self.km.clicked.connect(self.km1)
     self.money.clicked.connect(self.money1)
     self.euro.clicked.connect(self.euro1)
-
+    self.enlang.clicked.connect(self.enlang1)
+    self.rulang.clicked.connect(self.rulang1)
     self.dollar.clicked.connect(self.dollar1)
     self.rub.clicked.connect(self.rub1)
     self.cls.clicked.connect(self.cls1)
+    self.mm.clicked.connect(self.mm1)
+    self.cm.clicked.connect(self.cm1)
     self.money.hide()
     self.rub.hide()
+    self.enlang.hide()
+    self.rulang.hide()
     self.euro.hide()
     self.dollar.hide()
     self.pushButton.hide()
@@ -47,6 +60,9 @@ class MyDialog(QMainWindow):
     self.pushButton_2.hide()
     self.km.hide()
     self.cls.hide()
+    self.cm.hide()
+    self.mm.hide()
+
 
     self.lineEdit.hide()
 
@@ -79,7 +95,16 @@ class MyDialog(QMainWindow):
 
   def buttonPress(self):
     i = self.lineEdit.text()
-
+    if i.endswith('ᶜᵐ'):
+      i = i[:-2]
+      c = float(i)
+      mm = c/10
+      inc = c * 0.3937007874
+      m = c / 100
+      if (self.abc == 'en'):
+        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 3)}ⁱⁿᶜᵸᵉˢ)")
+      if (self.abc == 'ru'):
+        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m} метров, {round(inc, 3)} дюймов)")
     if i.endswith('°'):
       i = i[:-1]
       c = float(i)
@@ -87,11 +112,18 @@ class MyDialog(QMainWindow):
       f = math.floor(f)
       self.lineEdit.setText(f"{c}°C ({f}°F)")
     if i.endswith('KM'):
-      i = i[:-2]
-      c = float(i)
-      mi = c * 0.62137
-      f = round(mi)
-      self.lineEdit.setText(f"{c}KM ({f}miles)")
+      if (self.abc == 'en'):
+        i = i[:-2]
+        c = float(i)
+        mi = c * 0.62137
+        f = round(mi)
+        self.lineEdit.setText(f"{c}ᵏᵐ ({f} Miles)")
+      if (self.abc == 'ru'):
+        i = i[:-2]
+        c = float(i)
+        mi = c * 0.62137
+        f = round(mi)
+        self.lineEdit.setText(f"{c} Километров ({f} Миль)")
     if i.endswith('€'):
       amount = float(i[:-1])
       c = CurrencyRates()
@@ -141,6 +173,21 @@ class MyDialog(QMainWindow):
     self.lineEdit.setText(f"{n}KM")
     self.myLabel.hide()
 
+  def rulang1(self):
+    self.abc = 'ru'
+    self.f.write('ru')
+
+  def enlang1(self):
+    self.abc = 'en'
+    self.f.write('en')
+
+  def mm1(self):
+    self.lineEdit.setText(f"{self.lineEdit.text()}ᵐᵐ")
+
+  def cm1(self):
+    self.lineEdit.setText(f"{self.lineEdit.text()}ᶜᵐ")
+
+
   def unf(self, widget):
     self.effect = QGraphicsOpacityEffect()
     widget.setGraphicsEffect(self.effect)
@@ -161,12 +208,16 @@ class MyDialog(QMainWindow):
     self.rub.show()
     self.cls.show()
 
+
+
     self.fade(self.pushButton_2)
     self.fade(self.km)
     self.unfade(self.rub)
     self.unfade(self.euro)
     self.unfade(self.dollar)
     self.unfade(self.cls)
+
+
 
     self.fade(self.money)
 
@@ -188,6 +239,8 @@ class MyDialog(QMainWindow):
     self.pushButton_3.show()
     self.km.show()
     self.money.show()
+    self.enlang.show()
+    self.rulang.show()
     self.setStyleSheet("QMainWindow {background: rgba(247, 247, 239 ,255)}")
     self.setStyleSheet("QMainWindow {background: hsl(60, 33, 95)}")
     self.myLabel.hide()
@@ -201,7 +254,12 @@ class MyDialog(QMainWindow):
     self.unfade(self.dollar)
     self.unfade(self.euro)
     self.unfade(self.rub)
-
+    self.unfade(self.rulang)
+    self.unfade(self.enlang)
+    self.cm.show()
+    self.mm.show()
+    self.unfade(self.mm)
+    self.unfade(self.cm)
     self.setStyleSheet("QLineEdit { border-radius: 5px; }")
 
   def celcius_menu_action(self):

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
-    <height>594</height>
+    <width>813</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,7 +72,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>22</pointsize>
+      <pointsize>11</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -91,7 +91,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-30</y>
+      <y>-10</y>
       <width>791</width>
       <height>591</height>
      </rect>
@@ -112,8 +112,8 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>710</x>
-      <y>230</y>
+      <x>720</x>
+      <y>200</y>
       <width>61</width>
       <height>61</height>
      </rect>
@@ -151,8 +151,8 @@
    <widget class="QPushButton" name="km">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>230</y>
+      <x>660</x>
+      <y>200</y>
       <width>61</width>
       <height>61</height>
      </rect>
@@ -164,8 +164,8 @@
    <widget class="QPushButton" name="money">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>230</y>
+      <x>600</x>
+      <y>200</y>
       <width>61</width>
       <height>61</height>
      </rect>
@@ -179,7 +179,7 @@
      <rect>
       <x>10</x>
       <y>200</y>
-      <width>171</width>
+      <width>181</width>
       <height>331</height>
      </rect>
     </property>
@@ -223,9 +223,9 @@
    <widget class="QPushButton" name="rub">
     <property name="geometry">
      <rect>
-      <x>180</x>
+      <x>190</x>
       <y>200</y>
-      <width>421</width>
+      <width>411</width>
       <height>101</height>
      </rect>
     </property>
@@ -268,17 +268,73 @@
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="rulang">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>260</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ru</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="enlang">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>260</y>
+      <width>61</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>en</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cm">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ᶜᵐ</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mm">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>260</y>
+      <width>121</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>mm</string>
+    </property>
+   </widget>
+   <zorder>myLabel</zorder>
+   <zorder>rub</zorder>
+   <zorder>enlang</zorder>
+   <zorder>rulang</zorder>
    <zorder>pushButton</zorder>
    <zorder>lineEdit</zorder>
    <zorder>pushButton_2</zorder>
    <zorder>pushButton_3</zorder>
    <zorder>km</zorder>
    <zorder>money</zorder>
-   <zorder>dollar</zorder>
    <zorder>euro</zorder>
-   <zorder>rub</zorder>
-   <zorder>myLabel</zorder>
    <zorder>cls</zorder>
+   <zorder>cm</zorder>
+   <zorder>mm</zorder>
+   <zorder>dollar</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
@@ -286,7 +342,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>805</width>
+     <width>813</width>
      <height>22</height>
     </rect>
    </property>
