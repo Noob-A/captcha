@@ -1,3 +1,2 @@
-"# captcha" 
-"# captcha" 
-"# captcha" 
+run main.py in pycharm
+done
