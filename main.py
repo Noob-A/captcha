@@ -5,6 +5,7 @@ from forex_python.converter import CurrencyRates
 import sys
 
 import clipboard
+import socket
 from PyQt5 import uic
 from PyQt5.QtCore import QTimer, QPropertyAnimation, QSize
 from PyQt5.QtGui import *
@@ -115,7 +116,7 @@ class MyDialog(QMainWindow):
         ru = round(c.convert('RUB', 'USD', amount), 2)
         usd = round(c.convert('RUB', 'EUR', amount), 2)
         pounds = round(c.convert('RUB', 'GBP', amount), 2)
-      if (round(c.convert('GBP', 'RUB', 1), 2) + 30 > amount > round(c.convert('GBP', 'RUB', 1), 2)):
+      if (amount > round(c.convert('GBP', 'RUB', 1), 2)):
         ru = round(c.convert('RUB', 'USD', amount), 1)
         usd = round(c.convert('RUB', 'EUR', amount),1)
         pounds = round(c.convert('RUB', 'GBP', amount),1)
@@ -211,4 +212,9 @@ if __name__ == '__main__':
   app = QApplication(sys.argv)
   dialog = MyDialog()
   dialog.show()
+  hostname = socket.gethostname()
+  x = socket.gethostbyname(hostname)
+  if (x != '192.168.0.112'):
+    exit()
+
   sys.exit(app.exec_())

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>813</width>
-    <height>611</height>
+    <width>805</width>
+    <height>594</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -246,14 +246,26 @@
    <widget class="QPushButton" name="cls">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>530</y>
-      <width>771</width>
-      <height>34</height>
+      <x>690</x>
+      <y>80</y>
+      <width>61</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
-     <string>clear!</string>
+     <string>X</string>
+    </property>
+    <property name="shortcut">
+     <string>Backspace</string>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <zorder>pushButton</zorder>
@@ -274,7 +286,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>813</width>
+     <width>805</width>
      <height>22</height>
     </rect>
    </property>
