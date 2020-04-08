@@ -10,15 +10,16 @@ from PyQt5.QtCore import QTimer, QPropertyAnimation, QSize
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from _winapi import *
-import pyautogui #for ctrl+v
+import pyautogui  # for ctrl+v
+
 ######################################################################################################
 far = False
 cel = False
 
 
-class MyDialog(QMainWindow) :
+class MyDialog(QMainWindow):
 
-  def __init__(self) :
+  def __init__(self):
     super().__init__()
     self.animations = []
     uic.loadUi("test.ui", self)
@@ -53,19 +54,19 @@ class MyDialog(QMainWindow) :
 
     self.pushButton.setIconSize(QSize(1000, 1500))
     QTimer.singleShot(4000,
-                      lambda : self.doneLoading())
+                      lambda: self.doneLoading())
 
-  def fade(self, widget) :
-     self.effect = QGraphicsOpacityEffect()
-     widget.setGraphicsEffect(self.effect)
-     animation = QPropertyAnimation(self.effect, b"opacity")
-     animation.setDuration(1000)
-     animation.setStartValue(1)
-     animation.setEndValue(0)
-     animation.start()
-     self.animations.append(animation)
+  def fade(self, widget):
+    self.effect = QGraphicsOpacityEffect()
+    widget.setGraphicsEffect(self.effect)
+    animation = QPropertyAnimation(self.effect, b"opacity")
+    animation.setDuration(1000)
+    animation.setStartValue(1)
+    animation.setEndValue(0)
+    animation.start()
+    self.animations.append(animation)
 
-  def unfade(self, widget) :
+  def unfade(self, widget):
     self.effect = QGraphicsOpacityEffect()
     widget.setGraphicsEffect(self.effect)
     animation = QPropertyAnimation(self.effect, b"opacity")
@@ -75,10 +76,10 @@ class MyDialog(QMainWindow) :
     animation.start()
     self.animations.append(animation)
 
-  def buttonPress(self) :
+  def buttonPress(self):
     i = self.lineEdit.text()
 
-    if i.endswith('°') :
+    if i.endswith('°'):
       i = i[:-1]
       c = float(i)
       f = (c * (9 / 5)) + 32
@@ -90,7 +91,7 @@ class MyDialog(QMainWindow) :
       mi = c * 0.62137
       f = round(mi)
       self.lineEdit.setText(f"{c}KM ({f}miles)")
-    if i.endswith('€') :
+    if i.endswith('€'):
       amount = float(i[:-1])
       c = CurrencyRates()
       c.get_rates('EUR')
@@ -100,7 +101,7 @@ class MyDialog(QMainWindow) :
       self.lineEdit.setText(f"€{amount} ({ru}₽, ${usd}, £{pounds})")
     if i.endswith('$'):
       amount = float(i[:-1])
-      c = CurrencyRates()                                     
+      c = CurrencyRates()
       c.get_rates('USD')
       ru = round(c.convert('USD', 'RUB', amount))
       usd = round(c.convert('USD', 'EUR', amount))
@@ -110,15 +111,15 @@ class MyDialog(QMainWindow) :
       amount = float(i[:-1])
       c = CurrencyRates()
       c.get_rates('RUB')
-      if (amount<60):
-        ru = round(c.convert('RUB', 'USD', amount),2)
-        usd = round(c.convert('RUB', 'EUR', amount),2)
-        pounds = round(c.convert('RUB', 'GBP', amount),2)
-      if (amount>60):
+      if (amount < 60):
+        ru = round(c.convert('RUB', 'USD', amount), 2)
+        usd = round(c.convert('RUB', 'EUR', amount), 2)
+        pounds = round(c.convert('RUB', 'GBP', amount), 2)
+      if (amount > 60):
         ru = round(c.convert('RUB', 'USD', amount))
         usd = round(c.convert('RUB', 'EUR', amount))
         pounds = round(c.convert('RUB', 'GBP', amount))
-        
+
       self.lineEdit.setText(f"{amount}₽ (${ru}, €{usd}, £{pounds})")
 
   def symbol_of_c(self):
@@ -133,6 +134,7 @@ class MyDialog(QMainWindow) :
     # pyautogui.click()
     # pyautogui.hotkey('ctrl', 'c')  # Press the Ctrl-C hotkey combination.
     clipboard.copy(self.lineEdit.text())
+
   def km1(self):
     n = self.lineEdit.text()
     self.lineEdit.setText(f"{n}KM")
@@ -148,7 +150,7 @@ class MyDialog(QMainWindow) :
     self.animation.start()
 
   def money1(self):
- 
+
     self.pushButton_2.show()
 
     self.km.show()
@@ -167,16 +169,11 @@ class MyDialog(QMainWindow) :
 
     self.fade(self.money)
 
-
   def cls1(self):
     self.lineEdit.setText("")
 
-
-
   def euro1(self):
     self.lineEdit.setText(f"{self.lineEdit.text()}€")
-
-
 
   def dollar1(self):
     self.lineEdit.setText(f"{self.lineEdit.text()}$")
@@ -184,12 +181,7 @@ class MyDialog(QMainWindow) :
   def rub1(self):
     self.lineEdit.setText(f"{self.lineEdit.text()}₽")
 
-
-
-
-
-
-  def doneLoading(self) :
+  def doneLoading(self):
     self.pushButton.show()
     self.pushButton_2.show()
     self.pushButton_3.show()
@@ -209,19 +201,13 @@ class MyDialog(QMainWindow) :
     self.unfade(self.euro)
     self.unfade(self.rub)
 
-
-
-
     self.setStyleSheet("QLineEdit { border-radius: 5px; }")
 
-
-  def celcius_menu_action(self) :
+  def celcius_menu_action(self):
     pass
 
 
-
-
-if __name__ == '__main__' :
+if __name__ == '__main__':
   app = QApplication(sys.argv)
   dialog = MyDialog()
   dialog.show()
