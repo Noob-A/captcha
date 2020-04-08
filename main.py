@@ -111,14 +111,14 @@ class MyDialog(QMainWindow):
       amount = float(i[:-1])
       c = CurrencyRates()
       c.get_rates('RUB')
-      if (amount < 60):
+      if (amount < round(c.convert('GBP', 'RUB', 1), 2)):
         ru = round(c.convert('RUB', 'USD', amount), 2)
         usd = round(c.convert('RUB', 'EUR', amount), 2)
         pounds = round(c.convert('RUB', 'GBP', amount), 2)
-      if (amount > 60):
-        ru = round(c.convert('RUB', 'USD', amount))
-        usd = round(c.convert('RUB', 'EUR', amount))
-        pounds = round(c.convert('RUB', 'GBP', amount))
+      if (round(c.convert('GBP', 'RUB', 1), 2) + 30 > amount > round(c.convert('GBP', 'RUB', 1), 2)):
+        ru = round(c.convert('RUB', 'USD', amount), 1)
+        usd = round(c.convert('RUB', 'EUR', amount),1)
+        pounds = round(c.convert('RUB', 'GBP', amount),1)
 
       self.lineEdit.setText(f"{amount}₽ (${ru}, €{usd}, £{pounds})")
 
