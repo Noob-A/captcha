@@ -188,7 +188,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Desktop/dollar-icon.png</normaloff>../../Desktop/dollar-icon.png</iconset>
+      <normaloff>dollar-icon.png</normaloff>dollar-icon.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -211,7 +211,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Desktop/euro-icon.png</normaloff>../../Desktop/euro-icon.png</iconset>
+      <normaloff>euro-icon.png</normaloff>euro-icon.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -234,7 +234,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../Desktop/Cjdowner-Cryptocurrency-Flat-Ruble-RUB.svg</normaloff>../../Desktop/Cjdowner-Cryptocurrency-Flat-Ruble-RUB.svg</iconset>
+      <normaloff>Cjdowner-Cryptocurrency-Flat-Ruble-RUB.svg</normaloff>Cjdowner-Cryptocurrency-Flat-Ruble-RUB.svg</iconset>
     </property>
     <property name="iconSize">
      <size>
