@@ -97,7 +97,7 @@ class MyDialog(QMainWindow) :
       ru = round(c.convert('EUR', 'RUB', amount))
       usd = round(c.convert('EUR', 'USD', amount))
       pounds = round(c.convert('EUR', 'GBP', amount))
-      self.lineEdit.setText(f"{i} ({ru}₽,{usd}$,{pounds}£)")
+      self.lineEdit.setText(f"€{amount} ({ru}₽, ${usd}, £{pounds})")
     if i.endswith('$'):
       amount = float(i[:-1])
       c = CurrencyRates()                                     
@@ -105,15 +105,21 @@ class MyDialog(QMainWindow) :
       ru = round(c.convert('USD', 'RUB', amount))
       usd = round(c.convert('USD', 'EUR', amount))
       pounds = round(c.convert('USD', 'GBP', amount))
-      self.lineEdit.setText(f"{i} ({ru}₽,{usd}€,{pounds}£)")
+      self.lineEdit.setText(f"${amount} ({ru}₽, €{usd}, £{pounds})")
     if i.endswith('₽'):
       amount = float(i[:-1])
       c = CurrencyRates()
       c.get_rates('RUB')
-      ru = round(c.convert('RUB', 'USD', amount))
-      usd = round(c.convert('RUB', 'EUR', amount))
-      pounds = round(c.convert('RUB', 'GBP', amount))
-      self.lineEdit.setText(f"{i} ({ru}$,{usd}€,{pounds}£)")
+      if (amount<60):
+        ru = round(c.convert('RUB', 'USD', amount),2)
+        usd = round(c.convert('RUB', 'EUR', amount),2)
+        pounds = round(c.convert('RUB', 'GBP', amount),2)
+      if (amount>60):
+        ru = round(c.convert('RUB', 'USD', amount))
+        usd = round(c.convert('RUB', 'EUR', amount))
+        pounds = round(c.convert('RUB', 'GBP', amount))
+        
+      self.lineEdit.setText(f"{amount}₽ (${ru}, €{usd}, £{pounds})")
 
   def symbol_of_c(self):
     n = self.lineEdit.text()
@@ -132,7 +138,7 @@ class MyDialog(QMainWindow) :
     self.lineEdit.setText(f"{n}KM")
     self.myLabel.hide()
 
-  def unf(self, widget) :
+  def unf(self, widget):
     self.effect = QGraphicsOpacityEffect()
     widget.setGraphicsEffect(self.effect)
     self.animation = QPropertyAnimation(self.effect, b"opacity")
