@@ -28,10 +28,7 @@ class MyDialog(QMainWindow):
     movie = QMovie("load.gif")
     self.myLabel.setMovie(movie)
     movie.start()
-    self.f=open("settings.txt", "r")
-
-    self.abc = self.f.read()
-    self.f=open("settings.txt", "a+")
+    self.abc = 'ru'
     self.setStyleSheet("QMainWindow {background: 'white';}")
 
 
@@ -95,16 +92,16 @@ class MyDialog(QMainWindow):
 
   def buttonPress(self):
     i = self.lineEdit.text()
-    if i.endswith('ᶜᵐ'):
+    if i.endswith('cm'):
       i = i[:-2]
       c = float(i)
       mm = c/10
       inc = c * 0.3937007874
       m = c / 100
       if (self.abc == 'en'):
-        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 3)}ⁱⁿᶜᵸᵉˢ)")
+        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 2)}ᶦⁿᶜʰᵉˢ)")
       if (self.abc == 'ru'):
-        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m} метров, {round(inc, 3)} дюймов)")
+        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m} метров, {round(inc, 2)} дюймов)")
     if i.endswith('°'):
       i = i[:-1]
       c = float(i)
@@ -175,17 +172,16 @@ class MyDialog(QMainWindow):
 
   def rulang1(self):
     self.abc = 'ru'
-    self.f.write('ru')
 
   def enlang1(self):
     self.abc = 'en'
-    self.f.write('en')
+
 
   def mm1(self):
-    self.lineEdit.setText(f"{self.lineEdit.text()}ᵐᵐ")
+    self.lineEdit.setText(f"{self.lineEdit.text()}mm")
 
   def cm1(self):
-    self.lineEdit.setText(f"{self.lineEdit.text()}ᶜᵐ")
+    self.lineEdit.setText(f"{self.lineEdit.text()}cm")
 
 
   def unf(self, widget):
@@ -241,6 +237,7 @@ class MyDialog(QMainWindow):
     self.money.show()
     self.enlang.show()
     self.rulang.show()
+    self.cls.show()
     self.setStyleSheet("QMainWindow {background: rgba(247, 247, 239 ,255)}")
     self.setStyleSheet("QMainWindow {background: hsl(60, 33, 95)}")
     self.myLabel.hide()
