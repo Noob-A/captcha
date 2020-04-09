@@ -304,7 +304,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>ᶜᵐ</string>
+     <string>cm</string>
     </property>
    </widget>
    <widget class="QPushButton" name="mm">

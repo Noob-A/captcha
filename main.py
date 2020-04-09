@@ -92,6 +92,17 @@ class MyDialog(QMainWindow):
 
   def buttonPress(self):
     i = self.lineEdit.text()
+    if i.endswith('mm'):
+      i = i[:-2]
+      c = float(i)
+      cm = c/100
+      m = c / 1000
+      inc = c * 0.039370
+      if (self.abc == 'en'):
+        self.lineEdit.setText(f"{round(c)}ᵐᵐ ({cm}ᶜᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 2)}ᶦⁿᶜʰᵉˢ)")
+      if (self.abc == 'ru'):
+        self.lineEdit.setText(f"{round(c)}ᵐᵐ ({cm}ᶜᵐ, {m} метров, {round(inc, 2)} дюймов)")
+
     if i.endswith('cm'):
       i = i[:-2]
       c = float(i)
@@ -99,22 +110,22 @@ class MyDialog(QMainWindow):
       inc = c * 0.3937007874
       m = c / 100
       if (self.abc == 'en'):
-        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 2)}ᶦⁿᶜʰᵉˢ)")
+        self.lineEdit.setText(f"{round(c)}ᶜᵐ ({mm}ᵐᵐ, {m}ᵐᵉᵗᵉʳˢ, {round(inc, 2)}ᶦⁿᶜʰᵉˢ)")
       if (self.abc == 'ru'):
-        self.lineEdit.setText(f"{c}ᶜᵐ ({mm}ᵐᵐ, {m} метров, {round(inc, 2)} дюймов)")
+        self.lineEdit.setText(f"{round(c)}ᶜᵐ ({mm}ᵐᵐ, {m} метров, {round(inc, 2)} дюймов)")
     if i.endswith('°'):
       i = i[:-1]
       c = float(i)
       f = (c * (9 / 5)) + 32
       f = math.floor(f)
-      self.lineEdit.setText(f"{c}°C ({f}°F)")
+      self.lineEdit.setText(f"{round(c)}°C ({f}°F)")
     if i.endswith('KM'):
       if (self.abc == 'en'):
         i = i[:-2]
         c = float(i)
         mi = c * 0.62137
         f = round(mi)
-        self.lineEdit.setText(f"{c}ᵏᵐ ({f} Miles)")
+        self.lineEdit.setText(f"{round(c)}ᵏᵐ ({f} Miles)")
       if (self.abc == 'ru'):
         i = i[:-2]
         c = float(i)
@@ -128,7 +139,7 @@ class MyDialog(QMainWindow):
       ru = round(c.convert('EUR', 'RUB', amount))
       usd = round(c.convert('EUR', 'USD', amount))
       pounds = round(c.convert('EUR', 'GBP', amount))
-      self.lineEdit.setText(f"€{amount} ({ru}₽, ${usd}, £{pounds})")
+      self.lineEdit.setText(f"€{round(amount)} ({ru}₽, ${usd}, £{pounds})")
     if i.endswith('$'):
       amount = float(i[:-1])
       c = CurrencyRates()
@@ -136,7 +147,7 @@ class MyDialog(QMainWindow):
       ru = round(c.convert('USD', 'RUB', amount))
       usd = round(c.convert('USD', 'EUR', amount))
       pounds = round(c.convert('USD', 'GBP', amount))
-      self.lineEdit.setText(f"${amount} ({ru}₽, €{usd}, £{pounds})")
+      self.lineEdit.setText(f"${round(amount)} ({ru}₽, €{usd}, £{pounds})")
     if i.endswith('₽'):
       amount = float(i[:-1])
       c = CurrencyRates()
@@ -150,7 +161,7 @@ class MyDialog(QMainWindow):
         usd = round(c.convert('RUB', 'EUR', amount),1)
         pounds = round(c.convert('RUB', 'GBP', amount),1)
 
-      self.lineEdit.setText(f"{amount}₽ (${ru}, €{usd}, £{pounds})")
+      self.lineEdit.setText(f"{round(amount)}₽ (${ru}, €{usd}, £{pounds})")
 
   def symbol_of_c(self):
     n = self.lineEdit.text()
