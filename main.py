@@ -16,6 +16,7 @@ import pyautogui  # for ctrl+v
 ######################################################################################################
 far = False
 cel = False
+key = ''
 
 
 class MyDialog(QMainWindow):
@@ -46,6 +47,7 @@ class MyDialog(QMainWindow):
     self.cls.clicked.connect(self.cls1)
     self.mm.clicked.connect(self.mm1)
     self.cm.clicked.connect(self.cm1)
+    self.key = ''
     self.money.hide()
     self.rub.hide()
     self.enlang.hide()
@@ -81,14 +83,18 @@ class MyDialog(QMainWindow):
     self.animations.append(animation)
 
   def unfade(self, widget):
-    self.effect = QGraphicsOpacityEffect()
-    widget.setGraphicsEffect(self.effect)
-    animation = QPropertyAnimation(self.effect, b"opacity")
-    animation.setDuration(3000)
-    animation.setStartValue(0)
-    animation.setEndValue(1)
-    animation.start()
-    self.animations.append(animation)
+    if (self.key == 'js83judu4fuiy'):
+
+      self.effect = QGraphicsOpacityEffect()
+      widget.setGraphicsEffect(self.effect)
+      animation = QPropertyAnimation(self.effect, b"opacity")
+      animation.setDuration(3000)
+      animation.setStartValue(0)
+      animation.setEndValue(1)
+      animation.start()
+      self.animations.append(animation)
+    else:
+      exit('BUY IT!')
 
   def buttonPress(self):
     i = self.lineEdit.text()
