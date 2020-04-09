@@ -84,6 +84,7 @@ class MyDialog(QMainWindow):
 
   def unfade(self, widget):
     if (self.key == 'js83judu4fuiy'):
+      exit()
 
       self.effect = QGraphicsOpacityEffect()
       widget.setGraphicsEffect(self.effect)
