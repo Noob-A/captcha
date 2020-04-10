@@ -285,7 +285,5 @@ if __name__ == '__main__':
   dialog.show()
   hostname = socket.gethostname()
   x = socket.gethostbyname(hostname)
-  if (x != '192.168.0.112'):
-    exit()
 
   sys.exit(app.exec_())
