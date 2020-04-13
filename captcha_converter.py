@@ -25,7 +25,7 @@ class MyDialog(QMainWindow):
     super().__init__()
 
     self.animations = []
-    uic.loadUi("test.ui", self)
+    uic.loadUi("converter's.ui", self)
     movie = QMovie("load.gif")
     self.myLabel.setMovie(movie)
     movie.start()
