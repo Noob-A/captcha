@@ -1,4 +1,6 @@
 import sys
+
+from PyQt5.QtCore import QPropertyAnimation
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -26,6 +28,7 @@ class Rect :
     self.lline = Line(x, y, x, y + h)
     self.rline = Line(x + w, y, x + w, y + h)
 
+
   def draw(self, painter) :
     for pt in [self.bline, self.tline, self.lline, self.rline] :
       painter.drawLine(pt.x1, pt.y1, pt.x2, pt.y2)
@@ -43,6 +46,28 @@ class Rect :
     a = Rect(self.x, self.y, self.w, self.h * randd)
     b = Rect(self.x, self.y + a.h, self.w, self.h - a.h)
     return [a, b]
+
+  def erase_intersection(self, line1, line2) :
+    if (line1.x1 == line1.x2 and
+        line1.x2 == line2.x1 and
+        line2.x1 == line2.x2) :
+      pass
+
+  def get_pixel_colour(i_x, i_y, linesX, linesY) :
+    import PIL.ImageGrab
+    return PIL.ImageGrab.grab().load()[i_x, i_y],
+
+  print(get_pixel_colour(0, 0, lineX, lineY))
+
+
+
+
+
+
+  @property
+
+  def all_lines(self) :
+    return [self.bline, self.tline, self.lline, self.rline]
 
 
 def split(rect, acc, depth) :
@@ -66,15 +91,46 @@ def split(rect, acc, depth) :
 class MyDialog(QMainWindow) :
   def __init__(self) :
     super().__init__()
+    self.animations = []
+    uic.loadUi("painter's.ui", self)
+    movie = QMovie("load.gif")
+    self.myLabel.setMovie(movie)
+    movie.start()
+    self.setStyleSheet("QMainWindow {background: 'white';}")
+    movie.stop()
+    self.myLabel.hide()
+    self.pushButton.clicked.connect(self.paintEvent)
+
+  def iterAllItems(self) :
+    items = []
+    for index in range(QListWidget.count()) :
+      items.append(QListWidget.item(index))
+    for r in items:
+      self.unfade(r)
+
 
   def paintEvent(self, event) :
     painter = QPainter(self)
-    #painter.setPen(QPen(Qt.green, 1))
-    rect = Rect(10,10,600,400)
+    # painter.setPen(QPen(Qt.green, 1))
+    rect = Rect(10, 10, 600, 400)
     acc = []
     split(rect, acc, 4)
-    for r in acc:
-      r.draw(painter)
+
+    lines = []
+    for r in acc :
+      lines.extend(r.all_lines)
+
+    r.draw(painter)
+
+  def unfade(self, widget) :
+    self.effect = QGraphicsOpacityEffect()
+    widget.setGraphicsEffect(self.effect)
+    animation = QPropertyAnimation(self.effect, b"opacity")
+    animation.setDuration(3000)
+    animation.setStartValue(0)
+    animation.setEndValue(1)
+    animation.start()
+    self.animations.append(animation)
 
   def mousePressEvent(self, event) :
     self.update()
