@@ -57,15 +57,7 @@ class Rect :
     import PIL.ImageGrab
     return PIL.ImageGrab.grab().load()[i_x, i_y],
 
-  print(get_pixel_colour(0, 0, lineX, lineY))
-
-
-
-
-
-
   @property
-
   def all_lines(self) :
     return [self.bline, self.tline, self.lline, self.rline]
 
