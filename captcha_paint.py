@@ -1,6 +1,4 @@
 import sys
-
-from PyQt5.QtCore import QPropertyAnimation
 from PyQt5.QtWidgets import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -9,12 +7,63 @@ import random
 import time
 
 
-class Line :
-  def __init__(self, x1, y1, x2, y2) :
-    self.x1 = x1
-    self.y1 = y1
-    self.x2 = x2
-    self.y2 = y2
+class Line:
+  def __init__(self, x1, y1, x2, y2):
+    self.x1 = min(x1,x2)
+    self.y1 = min(y1, y2)
+    self.x2 = max(x1, x2)
+    self.y2 = max(y1, y2)
+
+  @property
+  def horizontal(self):
+    return self.y1 == self.y2
+
+  @property
+  def vertical(self):
+    return self.x1 == self.x2
+
+  def contains(self, x, y):
+    if self.vertical:
+      return x == self.x1 and self.y1 <= y <= self.y2
+    elif self.horizontal:
+      return y == self.y1 and self.x1 <= x <= self.x2
+    else:
+      return False
+
+  @property
+  def empty(self):
+    return self.x1 == self.x2 and self.y1 == self.y2
+
+  #def __eq__(self, o) -> bool:
+  #  return self.x1 == o.x1 and self.x2 == o.x2 and self.y1 == o.y1 and self.y2 == o.y2
+
+  @property
+  def length(self):
+    if self.vertical:
+      return abs(self.y1 - self.y2)
+    elif self.horizontal:
+      return abs(self.x1 - self.x2)
+    else:
+      return math.sqrt(pow(self.x1-self.x2, 2) + pow(self.y1-self.y2, 2))
+
+  def get_door_line(self):
+    delta = 20
+    if self.length < (delta*6):
+      return None
+
+    if self.vertical:
+      return Line(self.x1, (self.y1 + self.y2) / 2 - delta, self.x2, (self.y1 + self.y2) / 2 + delta)
+    elif self.horizontal:
+      return Line((self.x1 + self.x2) / 2 - delta, self.y1, (self.x1 + self.x2) / 2 + delta, self.y2)
+    else:
+      return None
+
+  def draw(self, painter):
+    painter.drawLine(self.x1, self.y1, self.x2, self.y2)
+
+  def overlap(self, other):
+    if (self.horizontal and other.vertical) or (self.vertical and other.horizontal):
+      return None
 
 
 class Rect :
@@ -27,7 +76,6 @@ class Rect :
     self.tline = Line(x, y + h, x + w, y + h)
     self.lline = Line(x, y, x, y + h)
     self.rline = Line(x + w, y, x + w, y + h)
-
 
   def draw(self, painter) :
     for pt in [self.bline, self.tline, self.lline, self.rline] :
@@ -46,28 +94,6 @@ class Rect :
     a = Rect(self.x, self.y, self.w, self.h * randd)
     b = Rect(self.x, self.y + a.h, self.w, self.h - a.h)
     return [a, b]
-
-  def erase_intersection(self, line1, line2) :
-    if (line1.x1 == line1.x2 and
-        line1.x2 == line2.x1 and
-        line2.x1 == line2.x2) :
-      pass
-
-  def get_pixel_colour(i_x, i_y, linesX, linesY) :
-    import PIL.ImageGrab
-    return PIL.ImageGrab.grab().load()[i_x, i_y],
-
-  print(get_pixel_colour(0, 0, lineX, lineY))
-
-
-
-
-
-
-  @property
-
-  def all_lines(self) :
-    return [self.bline, self.tline, self.lline, self.rline]
 
 
 def split(rect, acc, depth) :
@@ -91,46 +117,15 @@ def split(rect, acc, depth) :
 class MyDialog(QMainWindow) :
   def __init__(self) :
     super().__init__()
-    self.animations = []
-    uic.loadUi("painter's.ui", self)
-    movie = QMovie("load.gif")
-    self.myLabel.setMovie(movie)
-    movie.start()
-    self.setStyleSheet("QMainWindow {background: 'white';}")
-    movie.stop()
-    self.myLabel.hide()
-    self.pushButton.clicked.connect(self.paintEvent)
-
-  def iterAllItems(self) :
-    items = []
-    for index in range(QListWidget.count()) :
-      items.append(QListWidget.item(index))
-    for r in items:
-      self.unfade(r)
-
 
   def paintEvent(self, event) :
     painter = QPainter(self)
-    # painter.setPen(QPen(Qt.green, 1))
-    rect = Rect(10, 10, 600, 400)
+    #painter.setPen(QPen(Qt.green, 1))
+    rect = Rect(10,10,600,400)
     acc = []
     split(rect, acc, 4)
-
-    lines = []
-    for r in acc :
-      lines.extend(r.all_lines)
-
-    r.draw(painter)
-
-  def unfade(self, widget) :
-    self.effect = QGraphicsOpacityEffect()
-    widget.setGraphicsEffect(self.effect)
-    animation = QPropertyAnimation(self.effect, b"opacity")
-    animation.setDuration(3000)
-    animation.setStartValue(0)
-    animation.setEndValue(1)
-    animation.start()
-    self.animations.append(animation)
+    for r in acc:
+      r.draw(painter)
 
   def mousePressEvent(self, event) :
     self.update()
