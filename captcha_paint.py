@@ -1,24 +1,145 @@
-import sys
-
-from PyQt5.QtCore import QPropertyAnimation
-from PyQt5.QtWidgets import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
-from PyQt5 import uic
 import random
-import time
+import sys
+import math
+from enum import Enum
+from typing import List, Any
+
+from PyQt5 import uic
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from flags import Flags
 
 
-class Line :
-  def __init__(self, x1, y1, x2, y2) :
-    self.x1 = x1
-    self.y1 = y1
-    self.x2 = x2
-    self.y2 = y2
+class Facing(Flags):
+    South = 1
+    SouthWest = 2
+    West = 4
+    NorthWest = 8
+    North = 16
+    NorthEast = 32
+    East = 64
+    SouthEast = 128
+
+class RoomType:
+  def __init__(self, name_rus: str, min_size: float, recommended_facing):
+      self.recommended_facing = recommended_facing
+      self.min_size = min_size
+      self.name_rus = name_rus
+
+class RoomTypes:
+  Unknown = RoomType("Неизвестный тип", 0, Facing.__no_flags_name__)
+  Bedroom = RoomType("Спальная", 12, Facing.East | Facing.SouthEast)
+  MasterBedroom = RoomType("Мастер спальня", 20, Facing.East | Facing.SouthEast)
+  Bathroom = RoomType("Ванная комната", 8, Facing.NorthEast)
+  LivingRoom = RoomType("Гостиная", 25, Facing.South)
+  Kitchen = RoomType("Кухня", 10, Facing.SouthEast)
+  BoilerRoom = RoomType("Бойлерная", 6, Facing.North)
+  GuestRoom = RoomType("Гостевая", 15, Facing.East | Facing.SouthEast)
+  Toilet = RoomType("Санузел", 2, Facing.NorthEast)
+  Pantry = RoomType("Постирочная", 5, Facing.NorthEast)
+  # Storage = 9
+  # Wardrobe = 10
+  # Terrace = 11
 
 
-class Rect :
-  def __init__(self, x, y, w, h) :
+
+
+class Line:
+  def __init__(self, x1, y1, x2, y2):
+    self.x1 = min(x1, x2)
+    self.y1 = min(y1, y2)
+    self.x2 = max(x1, x2)
+    self.y2 = max(y1, y2)
+
+  @property
+  def q(self):
+    return QLine(self.x1, self.y1, self.x2, self.y2)
+
+  @property
+  def horizontal(self):
+    return self.y1 == self.y2
+
+  @property
+  def is_vert_or_horz(self):
+    return self.x1 == self.x2 or self.y1 == self.y2
+
+  @property
+  def vertical(self):
+    return self.x1 == self.x2
+
+  def contains(self, x, y):
+    if self.vertical:
+      return x == self.x1 and self.y1 <= y <= self.y2
+    elif self.horizontal:
+      return y == self.y1 and self.x1 <= x <= self.x2
+    else:
+      return False
+
+  @property
+  def center(self) -> QPointF:
+    return QPointF((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2)
+
+  @property
+  def empty(self):
+    return self.x1 == self.x2 and self.y1 == self.y2
+
+  # def __eq__(self, o) -> bool:
+  #  return self.x1 == o.x1 and self.x2 == o.x2 and self.y1 == o.y1 and self.y2 == o.y2
+
+  @property
+  def length(self):
+    if self.vertical:
+      return abs(self.y1 - self.y2)
+    elif self.horizontal:
+      return abs(self.x1 - self.x2)
+    else:
+      return math.sqrt(pow(self.x1 - self.x2, 2) + pow(self.y1 - self.y2, 2))
+
+  def get_door_line(self):
+    delta = 20
+    if self.length < (delta * 6):
+      return None
+
+    if self.vertical:
+      return Line(self.x1, (self.y1 + self.y2) / 2 - delta, self.x2, (self.y1 + self.y2) / 2 + delta)
+    elif self.horizontal:
+      return Line((self.x1 + self.x2) / 2 - delta, self.y1, (self.x1 + self.x2) / 2 + delta, self.y2)
+    else:
+      return None
+
+  def draw(self, painter):
+    painter.drawLine(self.x1, self.y1, self.x2, self.y2)
+
+  def overlap(self, other):
+    if (self.horizontal and other.vertical) or (self.vertical and other.horizontal):
+      return None
+
+    start_on_other = other.contains(self.x1, self.y1)
+    end_on_other = other.contains(self.x2, self.y2)
+
+    other_start_on_this = self.contains(other.x1, other.y1)
+    other_end_on_this = self.contains(other.x2, other.y2)
+
+    result = None
+
+    if start_on_other and end_on_other:
+      result = self
+    elif other_start_on_this and other_end_on_this:
+      result = other
+    elif end_on_other and other_start_on_this:
+      result = Line(other.x1, other.y1, self.x2, self.y2)
+    elif start_on_other and other_end_on_this:
+      result = Line(self.x1, self.y1, other.x2, other.y2)
+
+    if result:
+      return result if not result.empty else None
+    else:
+      return None
+
+
+class Rect:
+  def __init__(self, x, y, w, h):
     self.w = w
     self.h = h
     self.y = y
@@ -27,108 +148,164 @@ class Rect :
     self.tline = Line(x, y + h, x + w, y + h)
     self.lline = Line(x, y, x, y + h)
     self.rline = Line(x + w, y, x + w, y + h)
+    self.doors = []
 
+  @property
+  def center(self):
+    return QPointF(self.x + self.w / 2, self.y + self.h / 2)
 
-  def draw(self, painter) :
-    for pt in [self.bline, self.tline, self.lline, self.rline] :
-      painter.drawLine(pt.x1, pt.y1, pt.x2, pt.y2)
-    # painter.drawRect(self.x,self.y ,self.w,self.h)
+  def shrink(self, amount):
+    return Rect(self.x + amount, self.y + amount, self.w - 2 * amount, self.h - 2 * amount)
 
-  def vsplit(self) :
+  @property
+  def qrectf(self):
+    return QRectF(self.x, self.y, self.w, self.h)
+
+  @property
+  def lines(self):
+    return [self.bline, self.tline, self.lline, self.rline]
+
+  def draw(self, painter: QPainter):
+    for line in [self.bline, self.tline, self.lline, self.rline]:
+      line.draw(painter)
+    flags = QTextOption()
+    flags.setAlignment(Qt.AlignCenter)
+    painter.drawText(self.qrectf,
+                     f'{self.area / 10000} m²\n{self.w / 100}×{self.h / 100}', flags)
+
+  @property
+  def area(self):
+    return self.w * self.h
+
+  def vsplit(self):
     rand = random.randint(70, 30)
     randd = round(100 / rand)
     a = Rect(self.x, self.y, self.w / randd, self.h)
     b = Rect(self.x + self.w / rand, self.y, self.w / randd, self.h)
     return [a, b]
 
-  def hsplit(self) :
+  def hsplit(self):
     randd = random.uniform(0.3, 0.7)
     a = Rect(self.x, self.y, self.w, self.h * randd)
     b = Rect(self.x, self.y + a.h, self.w, self.h - a.h)
     return [a, b]
 
-  def erase_intersection(self, line1, line2) :
-    if (line1.x1 == line1.x2 and
-        line1.x2 == line2.x1 and
-        line2.x1 == line2.x2) :
-      pass
 
-  def get_pixel_colour(i_x, i_y, linesX, linesY) :
-    import PIL.ImageGrab
-    return PIL.ImageGrab.grab().load()[i_x, i_y],
-
-  @property
-  def all_lines(self) :
-    return [self.bline, self.tline, self.lline, self.rline]
-
-
-def split(rect, acc, depth) :
-  if depth == 0 or (depth == 1 and random.uniform(0, 1) > 0.5) :
+def split(rect, acc, depth, total_depth):
+  if depth == 0 or (total_depth - depth > 1 and random.uniform(0, 1) > 0.4):
     acc.append(rect)
     return
 
   horz = rect.w > rect.h
-  randd = random.uniform(0.3, 0.7)
-  if horz :
-    a = Rect(rect.x, rect.y, rect.w * randd, rect.h)
-    b = Rect(rect.x + rect.w * randd, rect.y, rect.w - a.w, rect.h)
-  else :
-    a = Rect(rect.x, rect.y, rect.w, rect.h * randd)
+  randd = random.uniform(0.4, 0.6)
+  if horz:
+    a = Rect(rect.x, rect.y, int(rect.w * randd), rect.h)
+    b = Rect(rect.x + a.w, rect.y, rect.w - a.w, rect.h)
+  else:
+    a = Rect(rect.x, rect.y, rect.w, int(rect.h * randd))
     b = Rect(rect.x, rect.y + a.h, rect.w, rect.h - a.h)
 
-  for r in [a, b] :
-    split(r, acc, depth - 1)
+  for r in [a, b]:
+    split(r, acc, depth - 1, total_depth)
 
 
-class MyDialog(QMainWindow) :
-  def __init__(self) :
+class MyDialog(QMainWindow):
+  requiredRooms = [
+    RoomTypes.Bedroom,
+    RoomTypes.Bedroom,
+    RoomTypes.Bedroom,
+    RoomTypes.GuestRoom,
+    RoomTypes.Toilet,
+    RoomTypes.Bathroom,
+    RoomTypes.BoilerRoom,
+    RoomTypes.Pantry,
+    RoomTypes.Terrace,
+    RoomTypes.Wardrobe
+  ]
+
+  def __init__(self):
     super().__init__()
-    self.animations = []
-    uic.loadUi("painter's.ui", self)
-    movie = QMovie("load.gif")
-    self.myLabel.setMovie(movie)
-    movie.start()
+    # self.animations = []
+    # uic.loadUi("painter's.ui", self)
     self.setStyleSheet("QMainWindow {background: 'white';}")
-    movie.stop()
-    self.myLabel.hide()
-    self.pushButton.clicked.connect(self.paintEvent)
 
-  def iterAllItems(self) :
-    items = []
-    for index in range(QListWidget.count()) :
-      items.append(QListWidget.item(index))
-    for r in items:
-      self.unfade(r)
-
-
-  def paintEvent(self, event) :
+  def paintEvent(self, event):
     painter = QPainter(self)
+    f = QFont("Arial", pointSize=20)
+    painter.setFont(f)
     # painter.setPen(QPen(Qt.green, 1))
-    rect = Rect(10, 10, 600, 400)
+    rect = Rect(0, 0, 1800, 1300)
+    windowSize: QSize = self.size()
+    v_scale = windowSize.height() / rect.h
+    h_scale = windowSize.width() / rect.w
+    scale = min(h_scale, v_scale)
+    painter.scale(scale, scale)
     acc = []
-    split(rect, acc, 4)
+    split(rect, acc, 4, 4)
+    for r in acc:
+      whitePen = QPen()
+      # color = QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
+      # pen.setColor(color)
+      whitePen.setWidth(2)
+      painter.setPen(whitePen)
+      shrunk = r.shrink(4)
+      shrunk.draw(painter)
+      # r.draw(painter)
 
     lines = []
-    for r in acc :
-      lines.extend(r.all_lines)
+    for rc in acc:
+      for line in rc.lines:
+        lines.append(line)
 
-    r.draw(painter)
+    whitePen = QPen()
+    white = QColor(255, 255, 255)
+    gray = QColor(128, 128, 128)
+    whitePen.setColor(white)
+    whitePen.setWidth(10)
 
-  def unfade(self, widget) :
-    self.effect = QGraphicsOpacityEffect()
-    widget.setGraphicsEffect(self.effect)
-    animation = QPropertyAnimation(self.effect, b"opacity")
-    animation.setDuration(3000)
-    animation.setStartValue(0)
-    animation.setEndValue(1)
-    animation.start()
-    self.animations.append(animation)
+    grayPen = QPen()
+    grayPen.setColor(gray)
+    grayPen.setWidth(2)
 
-  def mousePressEvent(self, event) :
+    # this is a sucky idea because we don't know where the rooms are
+    for rc1 in acc:
+      for rc2 in acc:
+        for line1 in rc1.lines:
+          for line2 in rc2.lines:
+            if line1 != line2:
+              overlap = line1.overlap(line2)
+              if overlap is not None:
+                # overlap.draw(painter)
+                door = overlap.get_door_line()
+                if door is not None:
+                  rc1.doors.append(door)
+                  rc2.doors.append(door)
+                  painter.setPen(grayPen)
+                  painter.drawLine(door.center, rc1.center)
+                  painter.drawLine(door.center, rc2.center)
+                  painter.setPen(whitePen)
+                  door.draw(painter)
+
+    green = QColor(0, 0, 255)
+    greenPen = QPen()
+    greenPen.setColor(green)
+
+    for rc in acc:
+      if len(rc.doors) > 1:
+        for door1 in rc.doors:
+          for door2 in rc.doors:
+            if door1 != door2:
+              line = Line(door1.center.x(), door1.center.y(),
+                          door2.center.x(), door2.center.y())
+              if not line.is_vert_or_horz:
+                painter.setPen(greenPen)
+                # painter.drawLine(line.q)
+
+  def mousePressEvent(self, event):
     self.update()
 
 
-if __name__ == '__main__' :
+if __name__ == '__main__':
   app = QApplication(sys.argv)
   dialog = MyDialog()
   dialog.show()
