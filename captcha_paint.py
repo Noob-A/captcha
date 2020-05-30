@@ -213,7 +213,7 @@ class MyDialog(QMainWindow):
   requiredRooms = [
     RoomTypes.Bedroom,
     RoomTypes.Bedroom,
-    RoomTypes.Bedroom,
+    RoomTypes.MasterBedroom,
     RoomTypes.GuestRoom,
     RoomTypes.Toilet,
     RoomTypes.Bathroom,
