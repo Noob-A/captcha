@@ -149,13 +149,21 @@ class Rect:
     self.lline = Line(x, y, x, y + h)
     self.rline = Line(x + w, y, x + w, y + h)
     self.doors = []
+    self.type = RoomTypes.Unknown
 
   @property
   def center(self):
     return QPointF(self.x + self.w / 2, self.y + self.h / 2)
 
   def shrink(self, amount):
-    return Rect(self.x + amount, self.y + amount, self.w - 2 * amount, self.h - 2 * amount)
+    r = Rect(
+      self.x + amount,
+      self.y + amount,
+      self.w - 2 * amount,
+      self.h - 2 * amount)
+    r.doors = self.doors.copy()
+    r.type = self.type
+    return r
 
   @property
   def qrectf(self):
@@ -171,18 +179,20 @@ class Rect:
     flags = QTextOption()
     flags.setAlignment(Qt.AlignCenter)
     painter.drawText(self.qrectf,
-                     f'{self.area / 10000} m²\n{self.w / 100}×{self.h / 100}', flags)
+                     f'{self.area / 10000} m²\n{self.type.name_rus}', flags)
 
-
-  def getThisRoomType(self):
 
   @property
   def area(self):
     return self.w * self.h
 
+  def roundup(x):
+    return int(math.ceil(x / 10.0)) * 10
+
   def vsplit(self):
     rand = random.randint(70, 30)
     randd = round(100 / rand)
+    new_width = self / randd,
     a = Rect(self.x, self.y, self.w / randd, self.h)
     b = Rect(self.x + self.w / rand, self.y, self.w / randd, self.h)
     return [a, b]
@@ -213,7 +223,7 @@ def split(rect, acc, depth, total_depth):
 
 
 class MyDialog(QMainWindow):
-  requiredRooms = [
+  required_rooms = [
     RoomTypes.Bedroom,
     RoomTypes.Bedroom,
     RoomTypes.MasterBedroom,
@@ -223,7 +233,8 @@ class MyDialog(QMainWindow):
     RoomTypes.BoilerRoom,
     RoomTypes.Pantry,
     RoomTypes.Terrace,
-    RoomTypes.Wardrobe
+    RoomTypes.Wardrobe,
+    RoomTypes.LivingRoom
   ]
 
   def __init__(self):
@@ -251,18 +262,44 @@ class MyDialog(QMainWindow):
     scale = min(h_scale, v_scale)
     painter.scale(scale, scale)
 
-    acc = []
-    while (len(acc) != len(MyDialog.requiredRooms)) :
-      acc.clear()
-      split(rect, acc, 4, 4)
-      print(f"acc:{len(acc)}, roomsNeeded:{len(MyDialog.requiredRooms)}")
+    while True:
+      # check we have the right number of rooms
+      acc:[Rect] = []
+      while len(acc) != len(MyDialog.required_rooms):
+        acc.clear()
+        split(rect, acc, 4, 4)
+        print(f"acc:{len(acc)}, roomsNeeded:{len(MyDialog.required_rooms)}")
+      acc.sort(key=lambda room: room.area, reverse=True)
+
+      # assign room types
+      def get_key(room_type: RoomType):
+        return room_type.min_size
+      room_types = MyDialog.required_rooms.copy()
+      room_types.sort(key=get_key, reverse=True)
+
+      for r in acc:
+        area_m2 = r.area / 10000
+        for rt in room_types:
+          if area_m2 >= rt.min_size:
+            r.type = rt
+            room_types.remove(rt)
+            break
+
+      ok = True
+      for room in acc:
+        if room.type == RoomTypes.Unknown:
+          ok = False
+
+      break
+
+
 
     for r in acc:
-      whitePen = QPen()
-      # color = QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
-      # pen.setColor(color)
-      whitePen.setWidth(2)
-      painter.setPen(whitePen)
+      white_pen = QPen()
+      color = QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
+      white_pen.setColor(color)
+      white_pen.setWidth(2)
+      painter.setPen(white_pen)
       shrunk = r.shrink(4)
       shrunk.draw(painter)
       # r.draw(painter)
@@ -273,20 +310,19 @@ class MyDialog(QMainWindow):
       for line in rc.lines:
         lines.append(line)
 
-    whitePen = QPen()
+    white_pen = QPen()
     white = QColor(255, 255, 255)
     gray = QColor(128, 128, 128)
-    whitePen.setColor(white)
-    whitePen.setWidth(10)
+    white_pen.setColor(white)
+    white_pen.setWidth(10)
 
     grayPen = QPen()
     grayPen.setColor(gray)
     grayPen.setWidth(2)
-    if (len(acc) == len(MyDialog.requiredRooms)) :
-      self.globalMatchOfNumberOfRooms = 1
-    else:
-      self.globalMatchOfNumberOfRooms = 0
-    # this is a sucky idea because we don't know where the rooms are
+
+
+
+    # this is a sucky idea because we don't know where the room_types are
     for rc1 in acc:
       for rc2 in acc:
         for line1 in rc1.lines:
@@ -302,7 +338,7 @@ class MyDialog(QMainWindow):
                   painter.setPen(grayPen)
                   painter.drawLine(door.center, rc1.center)
                   painter.drawLine(door.center, rc2.center)
-                  painter.setPen(whitePen)
+                  painter.setPen(white_pen)
                   door.draw(painter)
 
     green = QColor(0, 0, 255)
