@@ -1,10 +1,12 @@
 import random
 import sys
 import math
+import threading
 from enum import Enum
+from threading import Thread
 from typing import List, Any
 
-from PyQt5 import uic
+from PyQt5 import uic, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -38,11 +40,9 @@ class RoomTypes:
   GuestRoom = RoomType("Гостевая", 15, Facing.East | Facing.SouthEast)
   Toilet = RoomType("Санузел", 2, Facing.NorthEast)
   Pantry = RoomType("Постирочная", 5, Facing.NorthEast)
-  # Storage = 9
-  # Wardrobe = 10
-  # Terrace = 11
-
-
+  Terrace = RoomType("Терасса", 5, Facing.South)
+  Wardrobe = RoomType("Гардероб", 12, Facing.NorthEast)
+  Storage = RoomType("Хранилище", 5, Facing.West)
 
 
 class Line:
@@ -173,6 +173,9 @@ class Rect:
     painter.drawText(self.qrectf,
                      f'{self.area / 10000} m²\n{self.w / 100}×{self.h / 100}', flags)
 
+
+  def getThisRoomType(self):
+
   @property
   def area(self):
     return self.w * self.h
@@ -192,7 +195,7 @@ class Rect:
 
 
 def split(rect, acc, depth, total_depth):
-  if depth == 0 or (total_depth - depth > 1 and random.uniform(0, 1) > 0.4):
+  if depth == 0 or (random.uniform(0, 1) > 0.8):
     acc.append(rect)
     return
 
@@ -229,6 +232,13 @@ class MyDialog(QMainWindow):
     # uic.loadUi("painter's.ui", self)
     self.setStyleSheet("QMainWindow {background: 'white';}")
 
+  def mousePressEvent(self, event):
+    self.update()
+
+  def hacks(self):
+    while self.l:
+      self.update()
+
   def paintEvent(self, event):
     painter = QPainter(self)
     f = QFont("Arial", pointSize=20)
@@ -240,8 +250,13 @@ class MyDialog(QMainWindow):
     h_scale = windowSize.width() / rect.w
     scale = min(h_scale, v_scale)
     painter.scale(scale, scale)
+
     acc = []
-    split(rect, acc, 4, 4)
+    while (len(acc) != len(MyDialog.requiredRooms)) :
+      acc.clear()
+      split(rect, acc, 4, 4)
+      print(f"acc:{len(acc)}, roomsNeeded:{len(MyDialog.requiredRooms)}")
+
     for r in acc:
       whitePen = QPen()
       # color = QColor(random.randint(0,255),random.randint(0,255),random.randint(0,255))
@@ -253,6 +268,7 @@ class MyDialog(QMainWindow):
       # r.draw(painter)
 
     lines = []
+
     for rc in acc:
       for line in rc.lines:
         lines.append(line)
@@ -266,7 +282,10 @@ class MyDialog(QMainWindow):
     grayPen = QPen()
     grayPen.setColor(gray)
     grayPen.setWidth(2)
-
+    if (len(acc) == len(MyDialog.requiredRooms)) :
+      self.globalMatchOfNumberOfRooms = 1
+    else:
+      self.globalMatchOfNumberOfRooms = 0
     # this is a sucky idea because we don't know where the rooms are
     for rc1 in acc:
       for rc2 in acc:
@@ -301,8 +320,6 @@ class MyDialog(QMainWindow):
                 painter.setPen(greenPen)
                 # painter.drawLine(line.q)
 
-  def mousePressEvent(self, event):
-    self.update()
 
 
 if __name__ == '__main__':
