@@ -14,14 +14,15 @@ from flags import Flags
 
 
 class Facing(Flags):
-    South = 1
-    SouthWest = 2
-    West = 4
-    NorthWest = 8
-    North = 16
-    NorthEast = 32
-    East = 64
-    SouthEast = 128
+  Internal = 0
+  South = 1
+  SouthWest = 2
+  West = 4
+  NorthWest = 8
+  North = 16
+  NorthEast = 32
+  East = 64
+  SouthEast = 128
 
 class RoomType:
   def __init__(self, name_rus: str, min_size: float, recommended_facing):
@@ -165,6 +166,9 @@ class Rect:
     r.type = self.type
     return r
 
+  def facing(self, house_w, house_h) -> Facing:
+    pass
+
   @property
   def qrectf(self):
     return QRectF(self.x, self.y, self.w, self.h)
@@ -186,23 +190,26 @@ class Rect:
   def area(self):
     return self.w * self.h
 
-  def roundup(x):
-    return int(math.ceil(x / 10.0)) * 10
 
-  def vsplit(self):
-    rand = random.randint(70, 30)
-    randd = round(100 / rand)
-    new_width = self / randd,
-    a = Rect(self.x, self.y, self.w / randd, self.h)
-    b = Rect(self.x + self.w / rand, self.y, self.w / randd, self.h)
-    return [a, b]
 
-  def hsplit(self):
-    randd = random.uniform(0.3, 0.7)
-    a = Rect(self.x, self.y, self.w, self.h * randd)
-    b = Rect(self.x, self.y + a.h, self.w, self.h - a.h)
-    return [a, b]
+  # def vsplit(self):
+  #   rand = random.randint(70, 30)
+  #   randd = round(100 / rand)
+  #   new_width = self.w / randd,
+  #   # a = Rect(self.x, self.y, self.w / randd, self.h)
+  #   # b = Rect(self.x + self.w / rand, self.y, self.w / randd, self.h)
+  #   a = Rect(self.x, self.y, new_width, self.h)
+  #   b = Rect(self.x + new_width, self.y, self.w - new_width, self.h)
+  #   return [a, b]
+  #
+  # def hsplit(self):
+  #   randd = random.uniform(0.3, 0.7)
+  #   a = Rect(self.x, self.y, self.w, self.h * randd)
+  #   b = Rect(self.x, self.y + a.h, self.w, self.h - a.h)
+  #   return [a, b]
 
+def roundup(x):
+  return int(round(x / 100.0)) * 100
 
 def split(rect, acc, depth, total_depth):
   if depth == 0 or (random.uniform(0, 1) > 0.8):
